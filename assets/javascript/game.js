@@ -3,28 +3,32 @@
      when you look in your console*/
     var englishAlphabet, possiblewords, guessInput, guess, guessButton, lettersGuessed, lettersMatched, output;
     var livesleft, letters, lives, currentWord, numLettersMatched, messages;
-    // the various variables used in the code- I only split it up because I wanted the code to appear on one line on my screen =]
+    // the various variables used in the code- I only split it up because I wanted the code to appear on one line on my screen.
     function setup() {
         /* Configuration function that assigns the values for variables (available letters that you can guess aka the English alphabet, how many lives
          or chances you have, the various messages spit out when you guess a letter, the win/loss messages, etc.) */
         englishAlphabet = "abcdefghijklmnopqrstuvwxyz";
         lives = 7;
+        /* decided to use some pretty awful words, hence the 7 lives. Possible words array contains multiple items*/
         possiblewords = ["bootcamp", "extension", "difficult", "infrastructure", "javascript", "intercontinental", "pepperoni", "shepherd", "computer"];
+
+        /*created a messages object that contains all of the possible messages that I need to send with this game. win, loss, guessing a letter you already
+        guessed, a response if you used an entry that wasn't a letter, etc.*/
         messages = {
             win: 'You win! Please contact the instructor for your complimentary pizza',
-            lose: 'Game over! You lose. Order the class pepperoni pizza (extra cheese please) ',
+            lose: 'Game over! You lose. Order the class pepperoni pizza (extra cheese please). Also, #forthewatch ',
             guessed: ' No point in repeating guesses you have already made, please try again...',
-            validLetter: 'That is not a letter. Do you know what letters are? Please enter a letter from A-Z'
+            validLetter: 'That is not a letter or you entered nothing. Do you know what letters are? Please enter a letter from A-Z'
         };
-        /* end configuration function */
+        /* End of the configuration function */
 
         lettersGuessed = lettersMatched = '';
         numLettersMatched = 0;
 
-        /* chooses a word at random from the variable */
+        /* Chooses a word at random from the possible words array. */
         currentWord = possiblewords[Math.floor(Math.random() * possiblewords.length)];
 
-        /* make #livesleft and #output blank, create variables for later access by the functions */
+        /* Makes #livesleft and #output blank, creates variables for later access by the functions */
         output = document.getElementById("output");
         livesleft = document.getElementById("livesleft");
         guessInput = document.getElementById("letter");
@@ -34,12 +38,13 @@
 
         document.getElementById("letter").value = '';
 
-        /* make sure guess button is enabled */
+        /* Ensures that the guess button is enabled */
         guessButton = document.getElementById("guess");
         guessInput.style.display = 'inline';
         guessButton.style.display = 'inline';
 
-        /* set up display of letters in current word */
+        /* Sets up the display for the letters in the current word- note, the word is invisible due to the css styling that makes the text  white
+        on the white background of the HTML page! */
         letters = document.getElementById("letters");
         letters.innerHTML = '<li class="current-word">Current word:</li>';
 
@@ -50,6 +55,8 @@
         }
     }
 
+
+    /* the function for the game ending once you have met the conditions to win, aka guessing all of the letters correctly.*/
     function gameOver(win) {
         if (win) {
             output.innerHTML = messages.win;
@@ -63,35 +70,38 @@
         guessInput.value = '';
     }
 
-    /* Start game - should ideally check for existing functions attached to window.onload */
+    /* Starts the game - should ideally check for existing functions attached to window.onload. In other words, once the page loads, the setup
+    function loads, which sets up your game! */
     window.onload = setup();
 
-    /* buttons */
+    /* By clicking the restart button, you trigger the setup function */
     document.getElementById("restart").onclick = setup;
 
-    /* reset letter to guess on click */
+    /* Resets the letter to your guess once you click the input button (enter key also works) */ /*NOTE- REVISIONS FOR AFTER HOMEWORK- CHANGE THIS TO
+    an onkeyup function to avoid the problem of having to constantly type the key into the guessInput box*/
     guessInput.onclick = function () {
         this.value = '';
     };
 
-    /* main guess function when user clicks #guess */
+    /* The main function for when a user clicks on the guess button.*/
     document.getElementById('hangman').onsubmit = function (e) {
         if (e.preventDefault) e.preventDefault();
         output.innerHTML = '';
         output.classList.remove('error', 'warning');
         guess = guessInput.value;
 
-        /* does guess have a value? if yes continue, if no, error message sends */
+        /* Does your guess have a value? if yes continue, if no, error message is sent */
         if (guess) {
-            /* is guess a valid letter? if so carry on, else error message sends */
+            /* Is your guess a valid letter? if so carry on, else error message sends */
             if (englishAlphabet.indexOf(guess) > -1) {
-                /* has the letter been guessed (missed or matched) already? if so, abandon the current guess & add notice to the user */
+                /* has the letter been guessed (missed or matched) already? If so, abandon the current guess & add a snarky notice to the user */
                 if ((lettersMatched && lettersMatched.indexOf(guess) > -1) || (lettersGuessed && lettersGuessed.indexOf(guess) > -1)) {
                     output.innerHTML = '"' + guess.toUpperCase() + '"' + messages.guessed;
                     output.classList.add("warning");
                 }
-                /* does the guessed letter exist in current word? if so, add to the displayed letters that have already matched, if the final letter(s)
-                remaining in the word are added via your guess added, trigger a game over with win message! */
+                /* Does the guessed letter exist in the current word? If so, add this to the displayed letters that have already matched (by changing the
+                background to green per the css sheet, reveiling the white letters). If the final letter(s) remaining in the word are added via your guess,
+                trigger a game over with the win message, and make an empty promise about receiving pizza! */
                 else if (currentWord.indexOf(guess) > -1) {
                     var lettersToShow;
                     lettersToShow = document.querySelectorAll(".letter" + guess.toUpperCase());
@@ -100,7 +110,7 @@
                         lettersToShow[i].classList.add("correct");
                     }
 
-                    /* check to see if letter appears multiple times in the word*/
+                    /* Checks to see if the given letter appears multiple times in the current word you are trying to identify*/
                     for (var j = 0; j < currentWord.length; j++) {
                         if (currentWord.charAt(j) === guess) {
                             numLettersMatched += 1;
@@ -112,8 +122,8 @@
                         gameOver(true);
                     }
                 }
-                /* If your guess guess doesn't exist in current word and hasn't been guessed before, add to lettersGuessed, reduce lives & notify
-                the user that they have lost a life*/
+                /* If your guess doesn't exist in the current word and hasn't been guessed before, adds your guess to lettersGuessed, reduces lives
+                 and notifies the user that they have lost a life*/
                 else {
                     lettersGuessed += guess;
                     lives--;
@@ -121,13 +131,13 @@
                     if (lives === 0) gameOver();
                 }
             }
-            /* not a valid letter, error */
+            /* If you guess is not a valid letter, i.e. entering a character or a number, returns a snarky error*/
             else {
                 output.classList.add('error');
                 output.innerHTML = messages.validLetter;
             }
         }
-        /* no letter entered, error */
+        /* Otherwise, if you pressed the Guess button without actually making any input, returns an error message!*/
         else {
             output.classList.add('error');
             output.innerHTML = messages.validLetter;
