@@ -1,0 +1,44 @@
+* {
+    box-sizing: border-box;
+}
+body {
+    font-family: sans-serif;
+}
+/* Styling options for the various text in the output boxes, messages, etc. Also creates the empty lines below the letters you have to guess.
+by using the border-bottom of 1px solid black: this bottom border is the visible underlining of what is a currently invisible letter, since the
+letters are white to begin with. By adding a background color of green once you have correctly guessed a letter, the webpage effectively "highlights"
+the letter, allowing the user to see the correct choices they have made (white text shows up on a green background)! If you were to simply change the
+.letter color to something besides white and thus change their initial appearance (when the game starts),you would be able to cheat as the word you 
+would have to guess would be immediately visible to the user. */
+ .letter {
+    display: inline-block;
+    list-style: none;
+    width: 20px;
+    margin: 0 5px;
+    border-bottom: 1px solid black;
+    text-align: center;
+    color: white;
+}
+.current-word {
+    list-style: none;
+}
+.output {
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+.correct {
+    background-color: green;
+    transition: all 1s ease;
+}
+.error {
+    color: red;
+    opacity: 1;
+}
+.warning {
+    color: orange;
+    opacity: 1;
+}
+.win {
+    color: green;
+    opacity: 1;
+}

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en-us">
+<head>
+	<meta charset = "UTF-8">
+	<link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+  	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+</head>
+
+<h1>Colin Stone's 'Hangman' Game</h1>
+
+<p>Guess the letters of the word! After 7 incorrect guesses in a game, YOU LOSE!</p>
+<form id="hangman">
+    <input type="text" maxlength="1" minlength="1" name="letter" id="letter" placeholder="Guess a letter" />
+    <input id="guess" name="guess" type="submit" value="Guess" />
+    <button id="restart" name="restart" type="button">Restart</button>
+</form>
+<ul id="letters"></ul>
+<p id="livesleft"></p>
+<p id="output" class="output"></p>
+<script src="assets/javascript/game.js" type="text/javascript"></script>
+<!-- Note- put script at end of the html file as it needs to run after the page is completely loaded. Putting it earlier in this file will cause
+issues with the lines of code regarding innerHTML in the linked javascript file!-->
